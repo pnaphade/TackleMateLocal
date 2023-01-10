@@ -1,11 +1,12 @@
-import reconstruct
 import numpy as np
 import time
+import reconstruct
 
-def score(video_filepath, timestamp):
+
+def score(model, video_filepath, timestamp):
 
     # Get body keypoints and framerate
-    kp, fps = reconstruct.reconstruct(video_filepath)
+    kp, fps = reconstruct.reconstruct(model, video_filepath)
 
     n_frames = len(kp)
     length = round(n_frames*(1/fps), 2)
@@ -38,6 +39,7 @@ def score(video_filepath, timestamp):
     tackle_frame = int(round((fps * float(timestamp))))
     print("\n")
     print("------------------------------------------------------")
+    print(f"Tackle timetamp: {round(timestamp, 2)}")
     print(f"Tackle frame: {tackle_frame}/{n_frames}")
     should_height_tackle = left_shoulder_y[tackle_frame] - left_ankle_y[tackle_frame]
 
