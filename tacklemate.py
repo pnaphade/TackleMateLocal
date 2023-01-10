@@ -16,9 +16,10 @@ def load_model():
     try:
         model = hub.load('https://tfhub.dev/google/movenet/multipose/lightning/1')
         model = model.signatures['serving_default'] # default model
-        load_status = "Model successfully loaded!"
+        load_status = True
     except Exception as e:
-        load_status = e
+        model = None
+        load_status = False
 
     return load_status
 
@@ -29,7 +30,7 @@ def index():
     if model is None:
         load_status = load_model()
     else:
-        load_status = "Model already loaded!"
+        load_status = True # model already loaded
 
     html_code = flask.render_template('index.html', username=username,
                                     given=given, load_status=load_status)
@@ -108,5 +109,5 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    os.system("gunicorn tacklemate:app")
-    #app.run(debug=True, port=50001, ssl_context='adhoc')
+    #os.system("gunicorn tacklemate:app")
+    app.run(debug=True, port=50001, ssl_context='adhoc')

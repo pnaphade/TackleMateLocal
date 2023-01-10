@@ -14,7 +14,13 @@
 
     <br> <h3>Welcome, {{given}}!</h3> <br>
 
-    Load status: {{load_status}} <br><br>
+
+    {% if load_status %}
+        Model successfully loaded ✅ <br> <br>
+    {% else %}
+
+        Model failed to load ❌ <br> Please try again<br><br>
+    {%endif%}
 
     <h5>To get started, choose a video to upload:</h5>
 
