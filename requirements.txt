@@ -1,0 +1,7 @@
+Flask
+gunicorn
+tensorflow
+tensorflow-hub
+opencv-python
+numpy
+contextlib2
