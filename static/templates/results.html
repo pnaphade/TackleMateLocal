@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>TackleMate</title>
+   <link rel="icon" href="/static/rugby-ball.png">
+</head>
+
+<body>
+
+    {% include 'header.html' %}
+
+
+   <div style="padding-left: 1rem;">
+        <br>
+        <h3> Your Results</h3> <br>
+
+        <h5> Video Information </h5>
+        Filename: {{video_fn}} <br>
+        Length: {{length}}s <br>
+        Tackle timestamp: {{timestamp}}s <br><br>
+
+        <h5> Tackle Scoring</h5>
+        Height: {{height_score}}/3, {{height_rating}}
+        <ul>
+            <li>{{height_feedback}}</li>
+        </ul>
+        Acceleration:
+        <ul>
+            <li></li>
+        </ul>
+        Wrap:
+        <ul>
+            <li></li>
+        </ul>
+
+        <br>
+
+    </div>
+   {% include 'footer.html' %}
+
+</body>
+</html>

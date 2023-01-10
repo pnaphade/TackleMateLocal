@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>TackleMate</title>
+   <link rel="icon" href="/static/rugby-ball.png">
+</head>
+
+<body>
+
+    {% include 'header.html' %}
+
+   <div style="padding-left: 1rem;">
+
+    <br> <h3>Welcome, {{given}}!</h3> <br>
+
+    <h5>To get started, choose a video to upload:</h5>
+
+    <form enctype = "multipart/form-data" onsubmit="return false;" >
+        <input id="file" type="file" name="video_file" accept="video/*">
+        <video id="video" width="700rem" height="400rem" controls style="display: none;"></video> <br>
+        <div id = "video msg"></div>
+        <br><br>
+        <button id="upload-button" onclick="uploadVideo(this.form)"> Score my tackle </button>
+
+    </form>
+
+    <!-- placeholder for statuses -->
+    <div id="upload status"> </div>
+    <div id="analyze status"> </div>
+
+
+    <!-- <button id="butOpenFile">Upload a video</button><br><br>
+    <textarea id="textArea" rows="1" cols="50"></textarea><br>
+
+    <input id="submit" type="Submit" value="Analyze my tackle" onclick="return send_vid_data(contents);">-->
+
+
+        <!--
+        //
+
+
+            -->
+
+        <!-- <form action="/get_score" method="post">
+        <button id="butOpenFile">butOpenFile</button>
+
+        <form>
+            <label for="img"><h5>Score a tackle</h5></label>
+            <br>
+
+            <label for="input">Choose a video:</label> <br>
+            <input type="file" id="vid" name="input_video" accept="video/*">
+            <video id="vid_player" width="400rem" height="250rem" controls style="display: none;"></video>
+            <br>
+
+
+            <small> Please browse to the timestamp where you made contact with the pad. </small>
+            <br><br>
+
+            Which shoulder did you tackle with?<br>
+            <small> if a shoulder did not make contact with the pad, or
+                both shoulders made contact with th pad, then choose
+                the shoulder that was further from the camera while
+                filming.</small>
+            <br>
+            <input type="radio" id="right" name="side" value="right">
+            <label for="left">Left</label>
+            <input type="radio" id="left" name="side" value="left">
+            <label for="right">Right</label>
+            <br><br>
+
+            <input type="Submit" value="Analyze my tackle" onclick="return timestamp();">
+        </form>
+        <br> -->
+
+    <!-- Require the peer dependencies of pose-detection. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+
+    <!-- You must explicitly require a TF.js backend if you're not using the TF.js union bundle. -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+
+    </div>
+   {% include 'footer.html' %}
+
+   <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+</body>
+</html>
