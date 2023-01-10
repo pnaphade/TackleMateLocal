@@ -56,6 +56,23 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     if(should_percent_change >= 50):
         return 3
 
+def analyze_speed(kp, kp_index, coods_index, tackle_frame, side):
+    '''
+        # code for calculating acceleration
+        left_shoulder_x = person0[:, kp_index["left shoulder"], coords_index["x"]]
+        score0 = person0[:, kp_index["left shoulder"], coords_index["conf"]]
+        score_mask = score0 > 0.5
+        print("Shape of score mask:", score_mask.shape)
+        print("Number of frames with score > 0.5:", score_mask.sum())
+        # don't include frames with a score less than 0.5
+        left_shoulder_x = left_shoulder_x[score_mask]
+        left_shoulder_x = 1 - left_shoulder_x   # transform so 1 is highest
+
+        visualize(shoulder_avankle_diff)
+        '''
+
+    return 0
+
 def analyze_arm(kp, kp_index, coords_index, tackle_frame, side):
 
     # Step 1: calulate l, the distance between shoulder and elbow
@@ -81,20 +98,13 @@ def analyze_arm(kp, kp_index, coords_index, tackle_frame, side):
     if side == "right":
         extension_ratio = extension_ratio * -1
     print("Arm extension ratio:", extension_ratio)
-    '''
-    print("Extension ratio indicates how horizontal the upper arm was.")
-    print("A positive extension ratio close to 1 indicates the upper  was close to horizontal")
-    print("An extension ratio close to 0 means that the upper arm was close to vertical, which indicates little to no arm usage")
-    print("A negative extension ration iniciates that the elbow was behind the shoulder, which is extremely poor technique.")
-    print("Extension ratio:", extension_ratio)
-    '''
 
     # Scoring percent in shoulder height change
     if(extension_ratio < 0.1):
         return 0
-    if(20 <= extension_ratio  < 0.2):
+    if(0.1 <= extension_ratio  < 0.2):
         return 1
-    if(40 <= extension_ratio < 0.3):
+    if(0.2 <= extension_ratio < 0.4):
         return 2
     if(extension_ratio >= 0.4):
         return 3
@@ -133,36 +143,24 @@ def score(model, video_filepath, timestamp, side):
     print(f"Tackle frame: {tackle_frame}/{n_frames}")
 
     h_score = analyze_height(kp, kp_index, coords_index, tackle_frame, side)
-    arm_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
+    s_score = analyze_speed(kp, kp_index, coords_index, tackle_frame, side)
+    a_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
 
 
     scores = {}
     scores["height"] = h_score
-    scores["accel"] = arm_score
-    scores["wrap"] = 0
+    scores["speed"] = s_score
+    scores["arm"] = a_score
 
     print("Scores:", scores)
     feedback = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     print(f"Tackle height score: {h_score}/3, {feedback[h_score]}")
-    print(f"Arm extension score: {arm_score}/3, {feedback[arm_score]}")
+    print(f"Arm extension score: {a_score}/3, {feedback[a_score]}")
 
     print("------------------------------------------------------")
 
     return scores, length
 
-    '''
-    # code for calculating acceleration
-    left_shoulder_x = person0[:, kp_index["left shoulder"], coords_index["x"]]
-    score0 = person0[:, kp_index["left shoulder"], coords_index["conf"]]
-    score_mask = score0 > 0.5
-    print("Shape of score mask:", score_mask.shape)
-    print("Number of frames with score > 0.5:", score_mask.sum())
-    # don't include frames with a score less than 0.5
-    left_shoulder_x = left_shoulder_x[score_mask]
-    left_shoulder_x = 1 - left_shoulder_x   # transform so 1 is highest
-
-    visualize(shoulder_avankle_diff)
-    '''
 
 
 if __name__ == '__main__':

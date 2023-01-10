@@ -80,10 +80,14 @@ def get_scores():
     height_rating = rating[height_score]
     height_feedback = h_feeback[height_score]
 
+    arm_score = scores["arm"]
+    arm_rating = rating[arm_score]
+
     html_code = flask.render_template('results.html', username=username,
             given=given, video_fn=video_fn, timestamp=round(timestamp, 2),
             height_score=height_score, height_rating=height_rating,
-            height_feedback=height_feedback, length=length)
+            height_feedback=height_feedback, arm_score=arm_score,
+            arm_rating=arm_rating, length=length)
     response = flask.make_response(html_code)
     return response
 

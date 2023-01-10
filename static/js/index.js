@@ -36,7 +36,6 @@ function uploadVideo(form){
             // be using POST here...
             timestamp = document.getElementById("video").currentTime
             side = document.querySelector('input[name="side"]:checked').value;
-            alert(side)
             score_url = "/get_scores?fn="
             score_url += encodeURIComponent(resp.filename)
             score_url += "&timestamp="
