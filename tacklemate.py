@@ -61,9 +61,10 @@ def get_scores():
 
     video_fn = flask.request.args.get("fn")
     timestamp = float(flask.request.args.get("timestamp"))
+    side = flask.request.args.get("side")
 
     # Calculate the tackle score
-    scores, length = formula.score(model, video_fn, timestamp)
+    scores, length = formula.score(model, video_fn, timestamp, side)
     rating = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     h_feeback = \
         {0:"Minimal change in height at tackle. Try to bend the knees \

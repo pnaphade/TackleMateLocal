@@ -27,7 +27,12 @@
     <form enctype = "multipart/form-data" onsubmit="return false;" >
         <input id="file" type="file" name="video_file" accept="video/*">
         <video id="video" width="700rem" height="400rem" controls style="display: none;"></video> <br>
-        <div id = "video msg"></div>
+        <div id = "video msg"></div><br>
+        Which shoulder was closest to the camera? <br>
+        <input type="radio" id="left" name="side" value="left">
+        <label for="left">Left</label>
+        <input type="radio" id="right" name="side" value="right">
+        <label for="css">Right</label><br>
         <br><br>
         <button id="upload-button" onclick="uploadVideo(this.form)"> Score my tackle </button>
 

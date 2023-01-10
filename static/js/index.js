@@ -35,10 +35,14 @@ function uploadVideo(form){
             // note: window.location.href uses GET, but really should
             // be using POST here...
             timestamp = document.getElementById("video").currentTime
+            side = document.querySelector('input[name="side"]:checked').value;
+            alert(side)
             score_url = "/get_scores?fn="
             score_url += encodeURIComponent(resp.filename)
             score_url += "&timestamp="
             score_url += encodeURIComponent(timestamp)
+            score_url += "&side="
+            score_url += encodeURIComponent(side)
             analyze_status.innerHTML = "Analyzing video..."
             window.location.href = score_url;}
 
