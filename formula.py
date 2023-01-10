@@ -90,13 +90,13 @@ def analyze_arm(kp, kp_index, coords_index, tackle_frame, side):
     '''
 
     # Scoring percent in shoulder height change
-    if(extension_ratio < 20):
+    if(extension_ratio < 0.1):
         return 0
-    if(20 <= extension_ratio  < 40):
+    if(20 <= extension_ratio  < 0.2):
         return 1
-    if(40 <= extension_ratio < 50):
+    if(40 <= extension_ratio < 0.3):
         return 2
-    if(extension_ratio >= 50):
+    if(extension_ratio >= 0.4):
         return 3
 
 def score(model, video_filepath, timestamp, side):
@@ -134,17 +134,18 @@ def score(model, video_filepath, timestamp, side):
 
     h_score = analyze_height(kp, kp_index, coords_index, tackle_frame, side)
     arm_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
-    return
 
 
     scores = {}
     scores["height"] = h_score
-    scores["accel"] = 0
+    scores["accel"] = arm_score
     scores["wrap"] = 0
 
     print("Scores:", scores)
     feedback = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     print(f"Tackle height score: {h_score}/3, {feedback[h_score]}")
+    print(f"Arm extension score: {arm_score}/3, {feedback[arm_score]}")
+
     print("------------------------------------------------------")
 
     return scores, length
