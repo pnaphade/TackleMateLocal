@@ -1,0 +1,7 @@
+*.DS_store
+*.mov
+*.mp4
+*.json
+*__pycache__*
+videos/*
+env.txt
