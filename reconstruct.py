@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+import tensorflow_hub as hub
 import cv2
 import numpy as np
 
@@ -35,6 +36,10 @@ def reconstruct(model, video_filepath):
         img = tf.cast(img, dtype=tf.int32)
 
         # Inference
+        if model is None:
+            print("*********model being loaded on the fly********")
+            model = hub.load('https://tfhub.dev/google/movenet/multipose/lightning/1')
+            model = model.signatures['serving_default']
         kp_frame = model(img)
 
         # Extract first person

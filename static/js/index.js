@@ -18,7 +18,7 @@ function uploadVideo(form){
         return
     }
 
-    if(! (document.getElementById('left').checked && document.getElementById('right'))) {
+    if(! (document.getElementById('left').checked || document.getElementById('right'))) {
         alert("Please indicate which shoulder is closest to the camera")
     }
 
