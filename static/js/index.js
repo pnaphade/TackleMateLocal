@@ -5,7 +5,7 @@ document.getElementById("file").addEventListener("change", function() {
     video.src = media;
     video.style.display = "block";
     video.play();
-    video_msg.innerHTML = "<strong> Please browse to the point in the video where you make contact with the pad. </strong>"
+    video_msg.innerHTML = "<strong> Please pause the video at the point when you make contact with the pad. </strong>"
 
   });
 
@@ -17,6 +17,18 @@ function uploadVideo(form){
         alert("Please select a video to upload")
         return
     }
+
+    if(! (document.getElementById('left').checked && document.getElementById('right'))) {
+        alert("Please indicate which shoulder is closest to the camera")
+    }
+
+    paused = document.getElementById("video").paused
+            ended = document.getElementById("video").ended
+            if((!paused) || ended) {
+                alert("Please pause the video at the point when you make contact with the pad")
+                return
+            }
+
     var upload_status = document.getElementById("upload status")
     var analyze_status = document.getElementById("analyze status")
 
@@ -34,8 +46,10 @@ function uploadVideo(form){
             // redirect user to get_scores server function
             // note: window.location.href uses GET, but really should
             // be using POST here...
+
+            var side = document.querySelector('input[name="side"]:checked').value;
             timestamp = document.getElementById("video").currentTime
-            side = document.querySelector('input[name="side"]:checked').value;
+            var side = document.querySelector('input[name="side"]:checked').value;
             score_url = "/get_scores?fn="
             score_url += encodeURIComponent(resp.filename)
             score_url += "&timestamp="
