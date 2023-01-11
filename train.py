@@ -11,23 +11,40 @@ h3 = np.array([60.27, 39.53, 60.32, 58.23, 60.68, 109.46, 74.77, 51.64, 62.94, 6
 
 height_dists = [h0, h1, h2, h3]
 
+print("-------------------------------------")
+print("Height distribution quartiles")
 for dist in height_dists:
     print("Q1", np.quantile(dist, 0.25))
     print("Q3", np.quantile(dist, 0.75))
     print()
+print("-------------------------------------")
 
 
-scores = [0, 1, 2, 3]
-fig1 = sns.violinplot(data=height_dists)
-fig1.set(xlabel="Height score", ylabel="Percent decrease in body height")
-#plt.show()
-
-
-
-
+#fig1 = sns.violinplot(data=height_dists)
+#fig1.set(xlabel="Height score", ylabel="Percent decrease in body height")
 
 
 # Speed
+print("-------------------------------------")
+print("Acceleration Distribution Quartiles")
+s0 = np.array([-50.22, -57.5, -114.75, -190.82 -52.94, -103.78, -6.24])
+s1 = np.array([-135.98, -47.70, -59.313, 3.43, -113.84, -4.69, 14.45])
+s2 = np.array([-48.44, -66.64, 7.96, -2.97])
+s3 = np.array([-52.7, -45.08, -58.20, 52.99, 4.97, -21.62])
+print("-------------------------------------")
+
+
+speed_dists = [s0, s1, s2, s3]
+print(len(speed_dists))
+for dist in speed_dists:
+    print("Q1", np.quantile(dist, 0.25))
+    print("Q3", np.quantile(dist, 0.75))
+    print()
+
+#fig2 = sns.violinplot(data=speed_dists)
+#fig2.set(xlabel="Acceleration score", ylabel="Percent change in velocity")
+#plt.show()
+
 
 # FLAG 13_003, 15_113, 21_000
 # Arm extension ratios
