@@ -116,18 +116,20 @@ def analyze_arm(kp, kp_index, coords_index, tackle_frame, side):
 
     # Step 3: calculate x/l to determine how extended the arm was
     extension_ratio = round(x/l, 2)
-    if side == "right":
+    if side == "left":
         extension_ratio = extension_ratio * -1
-    print("Arm extension ratio:", extension_ratio)
 
-    # Scoring percent in shoulder height change
-    if(extension_ratio < 0.1):
+    angle = math.asin(extension_ratio)
+    print("Angle:", angle)
+
+    # Scoring
+    if(angle < -0.62):
         return 0
-    if(0.1 <= extension_ratio  < 0.2):
+    if(-0.62 <= angle  < -0.425):
         return 1
-    if(0.2 <= extension_ratio < 0.4):
+    if(-0.425 <= angle < -0.145):
         return 2
-    if(extension_ratio >= 0.4):
+    if(angle >= -0.145):
         return 3
 
 def score(model, video_filepath, timestamp, side):
