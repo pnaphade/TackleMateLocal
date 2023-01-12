@@ -3,7 +3,8 @@ import tensorflow_hub as hub
 import time
 import math
 import reconstruct
-import sys
+import matplotlib.pyplot as plt
+#import sys
 
 def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
 
@@ -23,10 +24,9 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     print("Number of pre-tackle frames:", should_height_pretackle.size)
 
     # Get a mask for selecting which indices have reasonable confidence
-    shoulder_conf = kp[:, kp_index["left shoulder"], coords_index["conf"]]
+    shoulder_conf = kp[:, kp_index[f"{side} shoulder"], coords_index["conf"]]
     shoulder_conf_pretackle = shoulder_conf[:tackle_frame-1]
     shoulder_conf_mask = shoulder_conf_pretackle > 0.1
-    #print("Confidence mask:", lshoulder_conf_mask)
 
     # Select shoulder-ankle differences which meet confidence threshold
     should_height_pretackle_filtered = should_height_pretackle[shoulder_conf_mask]
@@ -47,29 +47,50 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     print(f"Percent change in shoulder height: {round(should_percent_change, 2)}%")
 
     # Scoring percent in shoulder height change
-    if(should_percent_change < 20):
+    if(should_percent_change < 31.06):
         return 0
-    if(20 <= should_percent_change  < 40):
+    if(31.06 <= should_percent_change  < 44.45):
         return 1
-    if(40 <= should_percent_change < 50):
+    if(44.45 <= should_percent_change < 53.27):
         return 2
-    if(should_percent_change >= 50):
+    if(should_percent_change >= 53.27):
         return 3
 
-def analyze_speed(kp, kp_index, coods_index, tackle_frame, side):
-    '''
-        # code for calculating acceleration
-        left_shoulder_x = person0[:, kp_index["left shoulder"], coords_index["x"]]
-        score0 = person0[:, kp_index["left shoulder"], coords_index["conf"]]
-        score_mask = score0 > 0.5
-        print("Shape of score mask:", score_mask.shape)
-        print("Number of frames with score > 0.5:", score_mask.sum())
-        # don't include frames with a score less than 0.5
-        left_shoulder_x = left_shoulder_x[score_mask]
-        left_shoulder_x = 1 - left_shoulder_x   # transform so 1 is highest
+def analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath):
 
-        visualize(shoulder_avankle_diff)
-        '''
+    should_x = (kp[:, kp_index[f"{side} shoulder"], coords_index["x"]])
+    should_conf = kp[:, kp_index[f"{side} shoulder"], coords_index["conf"]]
+    should_conf_mask = should_conf > 0.2
+
+    # Select shoulder predictions which meet confidence threshold
+    should_x = should_x[should_conf_mask][:tackle_frame]
+
+    window_width = 15
+
+    # calculate speed with slidings windows of length 5, stride 1
+    if side == "left":
+        orient = -1
+    else:
+        orient = 1
+
+    speeds = np.zeros((should_x.size - window_width))
+    for i in np.arange(speeds.size):
+        speeds[i] = (should_x[i+window_width] - should_x[i]) * orient
+
+    initial_speed = np.mean(speeds[3:6])
+    final_speed = np.mean(speeds[:-3])
+    percent_ch_speed = 100 * (final_speed - initial_speed)/initial_speed
+
+    print("Percent change in speed:", percent_ch_speed)
+
+    if(percent_ch_speed < -69.31):
+        return 0
+    if( -69.31 <= percent_ch_speed  < -26.81):
+        return 1
+    if(-26.81 <= percent_ch_speed < -40.04):
+        return 2
+    if(percent_ch_speed >= -40.04):
+        return 3
 
     return 0
 
@@ -142,8 +163,8 @@ def score(model, video_filepath, timestamp, side):
     print(f"Tackle timestamp: {round(timestamp, 2)}")
     print(f"Tackle frame: {tackle_frame}/{n_frames}")
 
+    s_score = analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath)
     h_score = analyze_height(kp, kp_index, coords_index, tackle_frame, side)
-    s_score = analyze_speed(kp, kp_index, coords_index, tackle_frame, side)
     a_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
 
 
