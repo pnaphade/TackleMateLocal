@@ -21,20 +21,40 @@
         Tackle timestamp: {{timestamp}}s <br><br>
 
         <h5> Tackle Scoring</h5>
-        Height: {{height_score}}/3, {{height_rating}}
+        Height:
+        {%if height_score == -1 %}
+            {{height_score}},
+        {%else%}
+        {{height_score}}/3,
+        {%endif%}
+        {{height_rating}}
         <ul>
             <li>{{height_feedback}}</li>
         </ul>
-        Speed:
+        Acceleration:
+        {%if accel_score == -1 %}
+            {{accel_score}},
+        {%else%}
+            {{accel_score}}/3,
+        {%endif%}
+        {{accel_rating}}
         <ul>
-            <li></li>
+            <li>{{accel_feedback}}</li>
         </ul>
-        Arm usage: {{arm_score}}/3, {{arm_rating}}
+        Arm extension:
+        {%if arm_score == -1 %}
+            {{arm_score}},
+        {%else%}
+            {{arm_score}}/3,
+        {%endif%}
+        {{arm_rating}}
         <ul>
-            <li></li>
+            <li>{{arm_feedback}}</li>
         </ul>
 
         <br>
+
+        <a href="/index">  Analyze another tackle </a>
 
     </div>
    {% include 'footer.html' %}

@@ -76,16 +76,45 @@ def get_scores():
     # Calculate the tackle score
     video_path = f"./tacklemate-videos/{video_fn}"
     scores, length = formula.score(model, video_path, timestamp, side)
-    rating = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
+    rating = {-1:"N/A", 0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     h_feeback = \
-        {0:"Minimal change in height at tackle. Try to bend the knees \
+        {-1: "Sorry, TackleMate didn't have enough information to \
+            score height for this video. Please try a different \
+            video.",
+        0:"Minimal change in height at tackle. Remember to bend the knees \
             and drop the shoulders.",
         1:"Some decrease in height at tackle. Try to drop to where the \
-            ball carrier's knees would be.", \
+            the ball carrier's thighs would be.", \
         2:"Good decrease in height at tackle! Try to drop to where the \
-            ball carrier's knees would be.",
-        3:"Excellent drop in height! As an excercise, try to brush the \
-            hands against the ground before making contact."}
+            ball carrier's thighs would be.",
+        3:"Excellent drop in height! As an excercise in getting low, \
+            try to brush your hands against the ground before tackling."}
+
+    accel_feedback = \
+        {-1: "Sorry, TackleMate didn't have enough information to \
+            score acceleration for this video. Please try a different \
+            video.",
+        0: "Large drop in speed before the tackle. Try to maintain \
+            your momentum as you tackle the pad.",
+        1: "Some decrease in speed before the tackle. Try to maintain \
+            your momentum as you tackle the pad. ",
+        2: "Good job with maintaining your speed before the tackle. \
+            Now, try to increase your speed into the tackle.",
+        3: "Excellent acceleration into the tackle!"}
+
+    arm_feedback = \
+        {-1: "Sorry, TackleMate didn't have enough information to \
+            score arm extension for this video. Please try a different \
+            video.",
+        0: "Minimal arm extension. Remember to reach your arms towards \
+            the pad.",
+        1: "Some arm extension. Remember to reach your arms towards \
+            the pad as much as you can and wrap.",
+        2: "Good arm extension towards the pad. Try to extend your upper \
+            arm so that it is parallel to the ground.",
+        3: "Excellent arm extension towards the pad. Remember to wrap \
+            the pad tightly with your forearms"}
+
 
     height_score = scores["height"]
     height_rating = rating[height_score]
@@ -93,12 +122,19 @@ def get_scores():
 
     arm_score = scores["arm"]
     arm_rating = rating[arm_score]
+    arm_feedback = arm_feedback[arm_score]
+
+    accel_score = scores["accel"]
+    accel_rating = rating[accel_score]
+    accel_feedback = accel_feedback[accel_score]
 
     html_code = flask.render_template('results.html', username=username,
             given=given, video_fn=video_fn, timestamp=round(timestamp, 2),
             height_score=height_score, height_rating=height_rating,
             height_feedback=height_feedback, arm_score=arm_score,
-            arm_rating=arm_rating, length=length)
+            arm_rating=arm_rating, arm_feedback=arm_feedback,
+            accel_score=accel_score, accel_rating=accel_rating,
+            accel_feedback=accel_feedback, length=length)
     response = flask.make_response(html_code)
     return response
 

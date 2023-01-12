@@ -33,6 +33,10 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     print("Number of filtered pre-tackle frames:", should_height_pretackle_filtered.size)
     print("------------------------------------------------------")
 
+    # Not enough information to score height
+    if should_height_pretackle_filtered.size == 0:
+        return -1
+
     # Calculate max difference between shoulder and ankle before tackle
     max_should_height_pretackle = np.amax(should_height_pretackle_filtered)
 
@@ -60,7 +64,7 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     if(should_percent_change >= 53.27):
         return 3
 
-def analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath):
+def analyze_accel(kp, kp_index, coords_index, tackle_frame, side, video_filepath):
 
     should_x = (kp[:, kp_index[f"{side} shoulder"], coords_index["x"]])
     should_conf = kp[:, kp_index[f"{side} shoulder"], coords_index["conf"]]
@@ -69,6 +73,10 @@ def analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath
     # Select shoulder predictions which meet confidence threshold
     should_x = should_x[should_conf_mask][:tackle_frame]
 
+
+    # Not enough information to score height
+    if should_x.size == 0:
+        return -1
     window_width = 15
 
     # calculate speed with slidings windows of length 5, stride 1
@@ -76,6 +84,10 @@ def analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath
         orient = -1
     else:
         orient = 1
+
+    if (should_x.size - window_width) <= 0:
+        return -1
+
 
     speeds = np.zeros((should_x.size - window_width))
     for i in np.arange(speeds.size):
@@ -169,20 +181,20 @@ def score(model, video_filepath, timestamp, side):
     print(f"Tackle timestamp: {round(timestamp, 2)}")
     print(f"Tackle frame: {tackle_frame}/{n_frames}")
 
-    s_score = analyze_speed(kp, kp_index, coords_index, tackle_frame, side, video_filepath)
-    h_score = analyze_height(kp, kp_index, coords_index, tackle_frame, side)
-    a_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
+    accel_score = analyze_accel(kp, kp_index, coords_index, tackle_frame, side, video_filepath)
+    height_score = analyze_height(kp, kp_index, coords_index, tackle_frame, side)
+    arm_score = analyze_arm(kp, kp_index, coords_index, tackle_frame, side)
 
 
     scores = {}
-    scores["height"] = h_score
-    scores["speed"] = s_score
-    scores["arm"] = a_score
+    scores["height"] = height_score
+    scores["accel"] = accel_score
+    scores["arm"] = arm_score
 
     print("Scores:", scores)
-    feedback = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
-    print(f"Tackle height score: {h_score}/3, {feedback[h_score]}")
-    print(f"Arm extension score: {a_score}/3, {feedback[a_score]}")
+    feedback = {-1:"N/A", 0:"poor", 1:"fair", 2:"good", 3:"excellent"}
+    print(f"Tackle height score: {height_score}/3, {feedback[height_score]}")
+    print(f"Arm extension score: {accel_score}/3, {feedback[accel_score]}")
 
     print("------------------------------------------------------")
 
