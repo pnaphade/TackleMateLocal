@@ -46,8 +46,18 @@ def upload_video():
     print("\n")
     print("-----------------------------------------------------------")
     print("Received upload request in python server")
+
+    # In case user deletes tacklemate-videos dir
+    path = "./tacklemate-videos"
+    isExist = os.path.exists(path)
+    if not isExist:
+        # Create a new directory because it does not exist
+        os.makedirs(path)
+
+
     f = flask.request.files['video_file']
-    f.save(f.filename)
+    f.save(f"./tacklemate-videos/{f.filename}")
+
     print("Successfully saved file", f.filename)
     print("-----------------------------------------------------------")
     #formula(f.filename)
@@ -64,7 +74,8 @@ def get_scores():
     side = flask.request.args.get("side")
 
     # Calculate the tackle score
-    scores, length = formula.score(model, video_fn, timestamp, side)
+    video_path = f"./tacklemate-videos/{video_fn}"
+    scores, length = formula.score(model, video_path, timestamp, side)
     rating = {0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     h_feeback = \
         {0:"Minimal change in height at tackle. Try to bend the knees \

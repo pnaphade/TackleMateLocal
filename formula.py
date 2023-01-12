@@ -37,7 +37,7 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     max_should_height_pretackle = np.amax(should_height_pretackle_filtered)
 
     # Calculate difference in shoulder height
-    should_diff = max_should_height_pretackle - should_height_tackle
+    should_diff = should_height_tackle - max_should_height_pretackle
 
     # Calculate percent change in shoulder height
     should_percent_change = abs(100 * (should_diff/max_should_height_pretackle))
@@ -45,6 +45,10 @@ def analyze_height(kp, kp_index, coords_index, tackle_frame, side):
     print("\n")
     print("------------------------------------------------------")
     print(f"Percent change in shoulder height: {round(should_percent_change, 2)}%")
+
+    # If shoulder height increased, return 0
+    if should_diff > 0:
+        return 0
 
     # Scoring percent in shoulder height change
     if(should_percent_change < 31.06):

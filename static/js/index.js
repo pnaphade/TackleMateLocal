@@ -12,9 +12,9 @@ document.getElementById("file").addEventListener("change", function() {
 function uploadVideo(form){
     const formData = new FormData(form);
 
-    // if name of video is not set, prompt user to upload
+    // if name of video is not set, prompt user to select
     if(!formData.get("video_file").name) {
-        alert("Please select a video to upload")
+        alert("Please select a video")
         return
     }
 
@@ -29,7 +29,6 @@ function uploadVideo(form){
                 return
             }
 
-    var upload_status = document.getElementById("upload status")
     var analyze_status = document.getElementById("analyze status")
 
     // create new post request
@@ -39,7 +38,6 @@ function uploadVideo(form){
     // handle response of python server
     oReq.onload = function(oEvent) {
         if (oReq.status == 200) {
-            upload_status.innerHTML = "Video uploaded!";
             resp = JSON.parse(oReq.responseText)
             console.log(resp)
 
@@ -60,12 +58,10 @@ function uploadVideo(form){
             window.location.href = score_url;}
 
         else {
-            upload_status.innerHTML = "An error occurred when trying to upload your video. Please try again. <br>";
+            upload_status.innerHTML = "An error occurred when trying to read your video. Please try again. <br>";
             }
         };
 
     // send user's video to python server
-    upload_status.innerHTML = "Uploading video...";
-    console.log("Uploading video...")
     oReq.send(formData);
 }
