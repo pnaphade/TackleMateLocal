@@ -12,15 +12,13 @@
 
    <div style="padding-left: 1rem;">
 
-    <br> <h3>Welcome, {{given}}!</h3> <br>
+    <br> <h3>Welcome!</h3> <br>
 
 
-    {% if load_status %}
-        Model successfully loaded &nbsp✅ <br> <br>
+    {% if load_status == False %}
+   <h5>TackleMate is experiencing technical issues at the moment. </h5>
+        Please try reloading the page. If the probelm persists .
     {% else %}
-
-        Model failed to load &nbsp❌ <br> Please try again<br><br>
-    {%endif%}
 
     <h5>To get started, choose a video:</h5>
 
@@ -54,6 +52,8 @@
    {% include 'footer.html' %}
 
    <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
+   {%endif%}
+
 
 </body>
 </html>
