@@ -3,7 +3,7 @@ import os
 import subprocess
 import flask
 import tensorflow_hub as hub
-import formula
+import score
 
 app = flask.Flask(__name__, template_folder='static/templates')
 username = "fake_username"
@@ -60,7 +60,7 @@ def upload_video():
 
     print("Successfully saved file", f.filename)
     print("-----------------------------------------------------------")
-    #formula(f.filename)
+    #score(f.filename)
     resp = {"success": True, "response": "file saved!", "filename": f.filename}
     return flask.jsonify(resp), 200
 
@@ -75,7 +75,7 @@ def get_scores():
 
     # Calculate the tackle score
     video_path = f"./tacklemate-videos/{video_fn}"
-    scores, length = formula.score(model, video_path, timestamp, side)
+    scores, length = score.score(model, video_path, timestamp, side)
     rating = {-1:"N/A", 0:"poor", 1:"fair", 2:"good", 3:"excellent"}
     h_feeback = \
         {-1: "Sorry, TackleMate didn't have enough information to \
